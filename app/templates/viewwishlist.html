@@ -42,20 +42,25 @@
     </p>
     </div>
     <div class="p_content wishlist">
+      {% if error != "User has no wishes" %}
       <div
         class="fb-like"
         data-share="true"
         data-width="250"
         data-show-faces="true" style="float:left; margin:10px 10px;">
       </div>
+      
       <!--<div class="fb-share-button" data-href="{{share['url']}}" data-layout="button_count" data-mobile-iframe="false"></div>-->
 <!--      <a href="javascript: void(0);" onClick="FB.ui({-->
 <!--  method: 'share',-->
 <!--  href: '{{share['url']}}',-->
 <!--}, function(response){});">share</a>-->
      <hr style="width:95%; clear:left;"/>
-      </table>
+      {% endif %}
       <div id="wishes">
+        {% if error %}
+          <h1>{{error}}</h1>
+        {% endif %}
         <table style="width:95%">
           {% for wish in wishes %}
             <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td></tr>

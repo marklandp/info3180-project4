@@ -117,32 +117,33 @@ def profiles():
 @app.route('/api/user/<id>/wishlist', methods=['POST', 'GET'])
 def profile(id):
   usr = User_info.query.filter_by(id=id).first()
-  wishes = Wishes.query.filter_by(user=usr.email).all()
-  if request.method == "GET":
-    form = WishForm()
-    error = "User has no wishes"
-    image = url_for('static', filename='img/'+usr.image)
-    user = {'id':str(id), 'image':image, 'age':usr.age, 'fname':usr.fname, 'lname':usr.lname, 'email':usr.email, 'sex':usr.sex}
-    share = {'title':urllib2.quote(usr.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/api/user/"+str(id)+"/wishlist", 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
-    if g.user.is_authenticated:
-      if wishes is not None:
-        return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form, share=share)
-      return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share, error=error)
-    if wishes is not None:
-      return render_template('viewwishlist.html', wishes=wishes, share=share, user=user)
-    return render_template('viewwishlist.html', error=error)
-  title = request.form['title']
-  desc = request.form['description']
-  thumb = request.form['thumb']
-  url = request.form['url']
-  user = usr.email
-  if thumb is not None:
-    wish = Wishes(title,desc,thumb,user,url)
-    db.session.add(wish)
-    db.session.commit()
+  if usr:
+    wishes = Wishes.query.filter_by(user=usr.email).all()
+    if request.method == "GET":
+      form = WishForm()
+      error = "User has no wishes"
+      image = url_for('static', filename='img/'+usr.image)
+      user = {'id':str(id), 'image':image, 'age':usr.age, 'fname':usr.fname, 'lname':usr.lname, 'email':usr.email, 'sex':usr.sex}
+      share = {'title':urllib2.quote(usr.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/api/user/"+str(id)+"/wishlist", 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
+      if g.user.is_authenticated:
+        if wishes:
+          return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form, share=share)
+        return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share, error=error)
+      if wishes:
+        return render_template('viewwishlist.html', wishes=wishes, share=share, user=user)
+      return render_template('viewwishlist.html', user=user, error=error)
+    title = request.form['title']
+    desc = request.form['description']
+    thumb = request.form['thumb']
+    url = request.form['url']
+    user = usr.email
+    if thumb is not None:
+      wish = Wishes(title,desc,thumb,user,url)
+      db.session.add(wish)
+      db.session.commit()
+      return redirect('/api/user/'+str(usr.id)+'/wishlist')
     return redirect('/api/user/'+str(usr.id)+'/wishlist')
-  return redirect('/api/user/'+str(usr.id)+'/wishlist')
-
+  return render_template('404.html')
   
   
 @app.route('/api/thumbnail/process', methods=['POST'])
@@ -160,7 +161,7 @@ def addWish():
         flash ('This item already exists in your wishlist.')
         return redirect('/api/user/'+str(g.user.id)+'/wishlist')
     images = []
-    hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36',
+    hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
        'Accept-Encoding': 'none',
