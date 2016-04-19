@@ -13,6 +13,7 @@ instructions
 3. install requirements.txt
 4. create proj3 database and set postgres user password to postgres/ configure your own database settings
 5. run db migrate -> upgrade
+6. register first user and use the system
 
 Features implemented
 --------------------
@@ -23,3 +24,4 @@ Features implemented
 4. most flashed error messages, will present a dismissable flash message
 5. all forms have form validation, passwords are hashed
 6. user can delete a wish
+7. each wish thumbnail is clickable and routes to the original url of the item in the wishlist
