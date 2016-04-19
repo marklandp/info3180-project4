@@ -41,7 +41,7 @@ def load_user(id):
 def home():
     """Render website's home page."""
     if g.user.is_authenticated:
-      return redirect(url_for('profile'))
+      return redirect('/api/user/'+str(g.user.id)+'/wishlist')
     return render_template('home.html')
 
 @app.route('/about/')
@@ -53,7 +53,7 @@ def about():
 def timeinfo():
     return datetime.now()
     
-@app.route('/register/', methods=['POST', 'GET'])
+@app.route('/api/user/register', methods=['POST', 'GET'])
 def register():
   """Render the profile page"""
   form = RegistrationForm()
@@ -77,7 +77,7 @@ def register():
   return render_template('form.html', form=form)
   
   
-@app.route('/signin', methods=['GET', 'POST'])
+@app.route('/api/user/login', methods=['GET', 'POST'])
 def signin():
   form = SigninForm()
   if g.user.is_authenticated:
@@ -93,7 +93,7 @@ def signin():
       if user is None and form.validate() == False:
         return redirect(url_for('signin'))
       login_user(user)
-      return redirect(request.args.get('next') or url_for('profile'))
+      return redirect(request.args.get('next') or '/api/user/'+str(user.id)+'/wishlist')
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
@@ -111,30 +111,56 @@ def profiles():
   users = db.session.query(User_info).all()
   if g.user.email == "marklandpayne@gmail.com":
     return render_template('profiles.html', users=users)
-  return redirect(url_for('profile'))
+  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
     
 
-@app.route('/profile', methods=['POST', 'GET'])
-@login_required
-def profile():
-  form = WishForm()
-  wishes = Wishes.query.filter_by(user=g.user.email).all()
-  image = url_for('static', filename='img/'+g.user.image)
-  user = {'id':g.user.id, 'image':image, 'age':g.user.age, 'fname':g.user.fname, 'lname':g.user.lname, 'email':g.user.email, 'sex':g.user.sex}
-  if wishes:
-    return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form)
-  return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form)
+@app.route('/api/user/<id>/wishlist', methods=['POST', 'GET'])
+def profile(id):
+  usr = User_info.query.filter_by(id=id).first()
+  wishes = Wishes.query.filter_by(user=usr.email).all()
+  if request.method == "GET":
+    form = WishForm()
+    error = "User has no wishes"
+    image = url_for('static', filename='img/'+usr.image)
+    user = {'id':str(id), 'image':image, 'age':usr.age, 'fname':usr.fname, 'lname':usr.lname, 'email':usr.email, 'sex':usr.sex}
+    share = {'title':urllib2.quote(usr.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/api/user/"+str(id)+"/wishlist", 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
+    if g.user.is_authenticated:
+      if wishes is not None:
+        return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form, share=share)
+      return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share, error=error)
+    if wishes is not None:
+      return render_template('viewwishlist.html', wishes=wishes, share=share, user=user)
+    return render_template('viewwishlist.html', error=error)
+  title = request.form['title']
+  desc = request.form['description']
+  thumb = request.form['thumb']
+  url = request.form['url']
+  user = usr.email
+  if thumb is not None:
+    wish = Wishes(title,desc,thumb,user,url)
+    db.session.add(wish)
+    db.session.commit()
+    return redirect('/api/user/'+str(usr.id)+'/wishlist')
+  return redirect('/api/user/'+str(usr.id)+'/wishlist')
+
   
-@app.route('/add', methods=['POST'])
+  
+@app.route('/api/thumbnail/process', methods=['POST'])
 @login_required
 def addWish():
   form = WishForm()
+  image = url_for('static', filename='img/'+g.user.image)
+  user = {'id':g.user.id, 'image':image, 'age':g.user.age, 'fname':g.user.fname, 'lname':g.user.lname, 'email':g.user.email, 'sex':g.user.sex}
+  share = {'title':urllib2.quote(g.user.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/wishes/"+g.user.email, 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
   if form.validate_on_submit():
     url = request.form['url']
-    # result = requests.get(url)
-    # data = result.text
+    wishes = Wishes.query.filter_by(user=g.user.email).all()
+    for wish in wishes:
+      if url in wish.url:
+        flash ('This item already exists in your wishlist.')
+        return redirect('/api/user/'+str(g.user.id)+'/wishlist')
     images = []
-    hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+    hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
        'Accept-Encoding': 'none',
@@ -171,33 +197,31 @@ def addWish():
     if thumbnail_spec and thumbnail_spec['href']:
       images.append(thumbnail_spec['href'])
     if len(images) >= 1:
-      return render_template('process.html', description=description, title=content, images=images, origin=url)
+      return render_template('process.html', user=user, description=description, title=content, images=images, url=url)
     else:
       desc="Unable to scrape any images from given url"
       title="Error"
-      return render_template('process.html', description=desc, title=title, images=images)
-  image = url_for('static', filename='img/'+g.user.image)
-  user = {'id':g.user.id, 'image':image, 'age':g.user.age, 'fname':g.user.fname, 'lname':g.user.lname, 'email':g.user.email, 'sex':g.user.sex}
-  return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form)
+      return render_template('process.html', user=user, description=desc, title=title, images=images)
+  return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share)
   
-@app.route('/commit', methods=['POST'])
-@login_required
-def commit():
-  if request.method == "POST":
-    title = request.form['title']
-    desc = request.form['description']
-    thumb = request.form['thumbnail']
-    origin = request.form['origin']
-    user = g.user.email
-    if thumb is not None:
-      wish = Wishes(title,desc,thumb,user,origin)
-      db.session.add(wish)
-      db.session.commit()
-      return redirect(url_for('profile'))
-    else:
-      return redirect(url_for('profile'))
-  else:
-    return render_template('404.html')
+# @app.route('/commit', methods=['POST'])
+# @login_required
+# def commit():
+#   if request.method == "POST":
+#     title = request.form['title']
+#     desc = request.form['description']
+#     thumb = request.form['thumbnail']
+#     origin = request.form['origin']
+#     user = g.user.email
+#     if thumb is not None:
+#       wish = Wishes(title,desc,thumb,user,origin)
+#       db.session.add(wish)
+#       db.session.commit()
+#       return redirect(url_for('profile'))
+#     else:
+#       return redirect(url_for('profile'))
+#   else:
+#     return render_template('404.html')
   
     
 @app.before_request

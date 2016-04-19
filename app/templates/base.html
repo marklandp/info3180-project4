@@ -4,10 +4,15 @@
   <meta charset="utf-8">
 
   <title>{% block title %}620011825{% endblock %}</title>
+  
+  <!--<meta property="og:url"                content="http://info3180-project4-marklandp.c9users.io:8080/wishlist/{{g.user.email}}" />-->
+  <meta property="og:type"               content="article" />
+  <!--<meta property="fb:app_id"             content="261930147473251" />-->
+  <meta property="og:title"              content="My Wishlist" />
+  <meta property="og:description"        content="This is my wishlist. Please purchase an item as a gift for me if you are able to." />
+  <meta property="og:image"              content="http://img15.deviantart.net/d031/i/2012/009/8/d/wishlist_by_isami_magda_chan-d4ltbkd.png" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
   <link rel="shortcut icon" href="/static/favicon.ico">
 
   <!-- HTML5 shim, for IE 6-8 support of HTML elements -->
@@ -23,7 +28,9 @@
   <!-- Rather use `less.js` to dynamically compile your `stylesheet/less` files? -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
   <script>window.less || document.write('<script src="/static/js/less.js">\x3C/script>')</script>
-
+  <script src="/static/js/jquery.js"></script>
+  <!--<script src="/static/js/jquerytools.js"></script>-->
+  <script src="/static/js/site.js"></script>
   <!-- Need Modernizr? Uncomment the following script. -->
   <!-- <script src="/static/js/modernizr.js"></script> -->
 
@@ -47,8 +54,10 @@
   <!-- JavaScript at the bottom for fast page loading -->
 
   <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
-  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="/static/js/jquery.js">\x3C/script>')</script>
+  <script>window.jQuery || document.write('<script src="/static/js/jquerytools.js">\x3C/script>')</script>-->
+  
 
 
   <!-- Additional JavaScript libraries and plugins... -->

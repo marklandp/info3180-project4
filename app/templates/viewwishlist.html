@@ -33,41 +33,15 @@
       -moz-border-radius-topleft: 10px;
       border-top-left-radius: 10px;">
     <div class="profile_name">
-      <h1>{{user['fname']}}  {{user['lname']}} <span><a id="exit" class="button" href="{{ url_for('signout') }}">Sign Out</a></span></h1>
+      <h1>{{user['fname']}}  {{user['lname']}}'s Wishlist</h1>
     </div>
   </div>
-  <div class="p_datebox content">
-    <p>Profile added on: {{ datestr }}</p>
-  </div>
-  <div class="p_content content">
+  <div class="p_content content" style="margin-bottom:40px;">
     <p>
-      Email: {{user['email']}}<br />
-      Sex: {{user['sex']}}<br />
-      Age: {{user['age']}}<br />
+      Please help me to clear some items off my wishlist. Any and all help is welcomed and appreciated!
     </p>
     </div>
     <div class="p_content wishlist">
-    <h1>{{user['fname']}}'s Wishlist</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-info alert-dismissable" style="width:98%;">
-          <a class="close" href="#">×</a>
-            {{message}}
-        </div>
-      {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <form action="{{ url_for('addWish') }}" method="post">
-      {{ form.hidden_tag() }}
-        <tr><td>Web Address:</td> <td>{{ form.url(placeholder="Enter Web Address Here") }}</td>
-        <td><div class="flash">
-        {% for message in form.url.errors %}
-        {{ message }}
-        {% endfor %}
-        </div></td></tr>
-        <tr><td colspan="3"><div class="imgBtn"><input type="image" src="https://www.aucklandairport.co.nz/~/media/Images/Retail/wishlist-button.png" alt="submit" style="height:24px;"/></div></td></tr>
-      </form>
       <div
         class="fb-like"
         data-share="true"
@@ -75,6 +49,10 @@
         data-show-faces="true" style="float:left; margin:10px 10px;">
       </div>
       <!--<div class="fb-share-button" data-href="{{share['url']}}" data-layout="button_count" data-mobile-iframe="false"></div>-->
+<!--      <a href="javascript: void(0);" onClick="FB.ui({-->
+<!--  method: 'share',-->
+<!--  href: '{{share['url']}}',-->
+<!--}, function(response){});">share</a>-->
      <hr style="width:95%; clear:left;"/>
       </table>
       <div id="wishes">
