@@ -27,8 +27,15 @@
  // )});
   $(window).load(function() {
    $(".close").click(dismiss);
+   $(".entry").click(remove);
   });
   
   function dismiss() {
    $(".alert-dismissable").hide("slow");
+  }
+  
+  function remove() {
+   var wish = $(event.target).val();
+   var url = "/api/wish/"+wish+"/delete"
+   $(location).attr("href", url);
   }

@@ -14,29 +14,37 @@
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-info alert-dismissable">
+          <a class="close" href="#">×</a>
             {{message}}
         </div>
       {% endfor %}
     {% endif %}
   {% endwith %}
   <hr />
-  <table>
+  <table style="width:80%;">
   <form action="{{ url_for('signin') }}" method="post">
     {{ form.hidden_tag() }}
-    <tr><td>Email:</td> <td>{{ form.email(placeholder="Enter Email") }}</td>
-    <td><div class="flash">
+    <tr><td>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        {{ form.email(placeholder="Enter Email", class_="form-control") }}                                       
+    </div></td></tr>
+    <tr><td><div class="lash">
         {% for message in form.email.errors %}
         {{ message }}
         {% endfor %}
     </div></td></tr>
     
-    <tr><td>Password: </td><td>{{ form.password(placeholder="Enter Password") }}</td>
-    <td><div class="flash">
+    <tr><td><div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                {{ form.password(placeholder="Enter Password", class_="form-control") }}
+            </div></td></tr>
+    <tr><td><div class="lash">
         {% for message in form.password.errors %}
         {{ message }}
         {% endfor %}
     </div></td></tr>
-    <tr><td>{{form.submit}}</td><td colspan="2"><a href="{{url_for('register')}}">Don&#39;t have an account? Register Here.</a></td></tr>
+    <tr><td>{{form.submit}} <p>Don&#39;t have an account? <a href="{{url_for('register')}}">Register Here.</a></p></td></tr>
   </form>
   </table>
 </div>

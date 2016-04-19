@@ -15,9 +15,11 @@ instructions
 5. run db migrate -> upgrade
 
 Features implemented
-------------
+--------------------
 
 1. all routes properly named and functioning according to API documentation, I dont return any json data though, just the views
-2. Facebook sharing of user's wishlist
+2. Facebook,email sharing of user's wishlist
 3. User cannot add same item/url again
-4. most errors present a dismissable flash message
+4. most flashed error messages, will present a dismissable flash message
+5. all forms have form validation, passwords are hashed
+6. user can delete a wish

@@ -74,14 +74,17 @@ def register():
     db.session.commit()
     flash('You have successfully registered. Login below.')
     return redirect(url_for('signin'))
-  return render_template('form.html', form=form)
+  if g.user.is_authenticated:
+    if g.user.email == "admin@wishlist.com":
+      return render_template('form.html', form=form)
+  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
   
   
 @app.route('/api/user/login', methods=['GET', 'POST'])
 def signin():
   form = SigninForm()
   if g.user.is_authenticated:
-    return redirect(url_for('profile'))
+    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
    
   if request.method == 'POST':
     if form.validate() == False:
@@ -109,7 +112,7 @@ def signout():
 @login_required
 def profiles():
   users = db.session.query(User_info).all()
-  if g.user.email == "marklandpayne@gmail.com":
+  if g.user.email == "admin@wishlist.com":
     return render_template('profiles.html', users=users)
   return redirect('/api/user/'+str(g.user.id)+'/wishlist')
     
@@ -205,6 +208,17 @@ def addWish():
       return render_template('process.html', user=user, description=desc, title=title, images=images)
   return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share)
   
+@app.route('/api/wish/<id>/delete', methods=['GET'])
+@login_required
+def delete(id):
+  wish = Wishes.query.filter_by(id=id).first()
+  if wish:
+    db.session.delete(wish)
+    db.session.commit()
+    flash ("Wish deleted!")
+    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+  
 # @app.route('/commit', methods=['POST'])
 # @login_required
 # def commit():
@@ -227,7 +241,7 @@ def addWish():
     
 @app.before_request
 def before_request():
-    g.user = current_user
+  g.user = current_user
     
 def date_to_str(dt):
   return dt.strftime("%a, %d %b, %Y")

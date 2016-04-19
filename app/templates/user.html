@@ -60,27 +60,31 @@
     {% endwith %}
     <form action="{{ url_for('addWish') }}" method="post">
       {{ form.hidden_tag() }}
-        <tr><td>Web Address:</td> <td>{{ form.url(placeholder="Enter Web Address Here") }}</td>
-        <td><div class="flash">
+      <table style="width:98%;">
+        <tr><td style="width:11%;">Web Address:</td><td>{{ form.url(placeholder="Enter Web Address Here", class_="form-control") }}</td><td>Please use this field to add items to your wishlist. If you want to delete a wish, click the checkbox next to it.</td></tr>
+        <tr><td colspan="3"><div class="flash">
         {% for message in form.url.errors %}
         {{ message }}
         {% endfor %}
         </div></td></tr>
         <tr><td colspan="3"><div class="imgBtn"><input type="image" src="https://www.aucklandairport.co.nz/~/media/Images/Retail/wishlist-button.png" alt="submit" style="height:24px;"/></div></td></tr>
+      </table>
       </form>
-      <div
+      {% if form.url.errors|length == 0 %}
+        <div
         class="fb-like"
         data-share="true"
         data-width="250"
         data-show-faces="true" style="float:left; margin:10px 10px;">
       </div>
+      <div style="float:left; margin 10px 10px;"> <a class="flash" href="mailto:name1@mail.com?subject=Hey!%20Checkout%20my%20wishlist!&amp;body=Hey%20Friend%3A%0A%0Acheck%20out%20my%20wishlist%20at%20the%20following%20address%3A%0Ahttp%3A%2F%2Finfo3180-project4-marklandp.c9users.io%3A8080%2Fapi%2Fuser%2F{{(user['id'])}}%2Fwishlist.%20Please%20help%20me%20to%20get%20some%20of%20these%20things%20off%20my%20list!%0A%20%0AThank%20you!">Share via Email</a> </div>
+      {% endif %}
       <!--<div class="fb-share-button" data-href="{{share['url']}}" data-layout="button_count" data-mobile-iframe="false"></div>-->
      <hr style="width:95%; clear:left;"/>
-      </table>
       <div id="wishes">
         <table style="width:95%">
           {% for wish in wishes %}
-            <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td></tr>
+            <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td><td><input class="entry" type="checkbox" name="wish" value="{{wish['id']}}"></td></tr>
             <tr><td colspan="3"><hr /></td></tr>
           {% endfor %}
       </table>
