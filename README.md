@@ -25,3 +25,16 @@ Features implemented
 5. all forms have form validation, passwords are hashed
 6. user can delete a wish
 7. each wish thumbnail is clickable and routes to the original url of the item in the wishlist
+8. if user has no wishes a message is displayed and sharing is disabled/hidden. As soon as a wish is added, sharing is enabled
+9. Logged user tries to access registration and login routes, they are redirected and a message is displayed. Admin can access registration page. Admin user has email "admin@wishlist.com"
+
+
+Confirmed to work on these websites
+-----------------------------------
+1. Amazon
+2. E-Bay
+3. Tiger Direct
+4. Lenovo
+5. Only pulls the dell logo. Can't pull laptop thumbnail. Description, Title and URL pulled
+6. Best Buy
+7. May work on others, not tested

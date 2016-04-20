@@ -67,10 +67,10 @@
         {{ message }}
         {% endfor %}
         </div></td></tr>
-        <tr><td colspan="3"><div class="imgBtn"><input type="image" src="https://www.aucklandairport.co.nz/~/media/Images/Retail/wishlist-button.png" alt="submit" style="height:24px;"/></div></td></tr>
+        <tr><td colspan="3"><div class="imgBtn"><input type="image" src="/static/add-to-wishlist.jpg" alt="submit" style="height:24px;"/></div></td></tr>
       </table>
       </form>
-      {% if form.url.errors|length == 0 %}
+      {% if form.url.errors|length == 0 and error != "User has no wishes" %}
         <div
         class="fb-like"
         data-share="true"
@@ -82,6 +82,9 @@
       <!--<div class="fb-share-button" data-href="{{share['url']}}" data-layout="button_count" data-mobile-iframe="false"></div>-->
      <hr style="width:95%; clear:left;"/>
       <div id="wishes">
+        {% if error %}
+          <h1>{{error}}</h1>
+        {% endif %}
         <table style="width:95%">
           {% for wish in wishes %}
             <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td><td><input class="entry" type="checkbox" name="wish" value="{{wish['id']}}"></td></tr>

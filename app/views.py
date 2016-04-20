@@ -74,16 +74,18 @@ def register():
     db.session.commit()
     flash('You have successfully registered. Login below.')
     return redirect(url_for('signin'))
-  if g.user.is_authenticated:
-    if g.user.email == "admin@wishlist.com":
-      return render_template('form.html', form=form)
-  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+  if g.user.is_authenticated and g.user.email != "admin@wishlist.com":
+    flash ("Cannot access registration page while logged in. Admin Only. You can log out and create a new account!")
+    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+  return render_template('form.html', form=form)
+  
   
   
 @app.route('/api/user/login', methods=['GET', 'POST'])
 def signin():
   form = SigninForm()
   if g.user.is_authenticated:
+    flash ("You're already logged in!")
     return redirect('/api/user/'+str(g.user.id)+'/wishlist')
    
   if request.method == 'POST':
