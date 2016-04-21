@@ -23,12 +23,16 @@
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
   <link rel="stylesheet/less" href="/static/css/main.less">
+  <link rel="stylesheet" href="/static/source/jquery.fancybox.css">
+  
   {% block css %}{% endblock %}
 
   <!-- Rather use `less.js` to dynamically compile your `stylesheet/less` files? -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
-  <script>window.less || document.write('<script src="/static/js/less.js">\x3C/script>')</script>
+  <script>window.less || document.write('<script src="/static/js/less.js">\x3C/script>');</script>
   <script src="/static/js/jquery.js"></script>
+  <script src="/static/source/jquery.fancybox.js"></script>
+  <script src="/static/source/jquery.fancybox.pack.js"></script>
   <!--<script src="/static/js/jquerytools.js"></script>-->
   <script src="/static/js/site.js"></script>
   <!-- Need Modernizr? Uncomment the following script. -->

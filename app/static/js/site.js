@@ -35,11 +35,13 @@
   }
   
   function remove() {
-   var sure = confirm("Do you really want to delete your wish?");
-   if (sure == true) {
-    var wish = $(event.target).val();
-    var url = "/api/wish/"+wish+"/delete"
-    $(location).attr("href", url);
+   var entry = $('.entry');
+   if (entry.is(':checked')) {
+    var sure = confirm("Do you really want to delete your wish?");
+    if (sure == true) {
+     var wish = $(event.target).val();
+     var url = "/api/wish/"+wish+"/delete";
+     $(location).attr("href", url);
+    }
    }
-   
   }

@@ -8,10 +8,10 @@ My Wishlist System
 
 instructions
 -------------
-1. install virtualenv 
+1. install virtualenv and activate environment
 2. sudo apt-get install libpq-dev python-dev
 3. install requirements.txt
-4. create proj3 database and set postgres user password to postgres/ configure your own database settings
+4. create proj3 database and set postgres user password to postgres or configure your own database settings
 5. run db migrate -> upgrade
 6. register first user and use the system
 
@@ -37,4 +37,5 @@ Confirmed to work on these websites
 4. Lenovo
 5. Only pulls the dell logo. Can't pull laptop thumbnail. Description, Title and URL pulled
 6. Best Buy
+7. Newegg
 7. May work on others, not tested

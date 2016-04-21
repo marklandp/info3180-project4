@@ -41,7 +41,7 @@ def load_user(id):
 def home():
     """Render website's home page."""
     if g.user.is_authenticated:
-      return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+      return redirect(url_for('profile', id=str(g.user.id)))
     return render_template('home.html')
 
 @app.route('/about/')
@@ -76,7 +76,7 @@ def register():
     return redirect(url_for('signin'))
   if g.user.is_authenticated and g.user.email != "admin@wishlist.com":
     flash ("Cannot access registration page while logged in. Admin Only. You can log out and create a new account!")
-    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+    return redirect(url_for('profile', id=str(g.user.id)))
   return render_template('form.html', form=form)
   
   
@@ -86,7 +86,7 @@ def signin():
   form = SigninForm()
   if g.user.is_authenticated:
     flash ("You're already logged in!")
-    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+    return redirect(url_for('profile', id=str(g.user.id)))
    
   if request.method == 'POST':
     if form.validate() == False:
@@ -98,7 +98,7 @@ def signin():
       if user is None and form.validate() == False:
         return redirect(url_for('signin'))
       login_user(user)
-      return redirect(request.args.get('next') or '/api/user/'+str(user.id)+'/wishlist')
+      return redirect(request.args.get('next') or url_for('profile', id=str(g.user.id)))
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
@@ -116,7 +116,7 @@ def profiles():
   users = db.session.query(User_info).all()
   if g.user.email == "admin@wishlist.com":
     return render_template('profiles.html', users=users)
-  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+  return redirect(url_for('profile', id=str(g.user.id)))
     
 
 @app.route('/api/user/<id>/wishlist', methods=['POST', 'GET'])
@@ -146,8 +146,8 @@ def profile(id):
       wish = Wishes(title,desc,thumb,user,url)
       db.session.add(wish)
       db.session.commit()
-      return redirect('/api/user/'+str(usr.id)+'/wishlist')
-    return redirect('/api/user/'+str(usr.id)+'/wishlist')
+      return redirect(url_for('profile', id=str(g.user.id)))
+    return redirect(url_for('profile', id=str(g.user.id)))
   return render_template('404.html')
   
   
@@ -164,7 +164,7 @@ def addWish():
     for wish in wishes:
       if url in wish.url:
         flash ('This item already exists in your wishlist.')
-        return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+        return redirect(url_for('profile', id=str(g.user.id)))
     images = []
     hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -218,8 +218,8 @@ def delete(id):
     db.session.delete(wish)
     db.session.commit()
     flash ("Wish deleted!")
-    return redirect('/api/user/'+str(g.user.id)+'/wishlist')
-  return redirect('/api/user/'+str(g.user.id)+'/wishlist')
+    return redirect(url_for('profile', id=str(g.user.id)))
+  return redirect(url_for('profile', id=str(g.user.id)))
   
 # @app.route('/commit', methods=['POST'])
 # @login_required
