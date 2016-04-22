@@ -39,3 +39,13 @@ Confirmed to work on these websites
 6. Best Buy
 7. Newegg
 7. May work on others, not tested
+
+
+Routes not in API documentation
+-------------------------------
+1. **"/api/wish/\<id\>/delete" METHOD=GET**  
+      Used to delete a wish. Olny input is wish id.I know how this looks but it is secure. Login is required for the route and of the currently 
+      logged in user does not match the user who created tthe wish then the user is redirected and a message
+      flashed to tell the user not to use the website maliciously. Works great otherwise.
+2. **"/api/wish/\<id\>/priority" METHODS=GET,POST**  
+     Used to update the rating of a wish. takes wish id and updates record

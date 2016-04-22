@@ -29,7 +29,7 @@
   <div class="body">
   <div class="cont">
   <div class="head">
-    <img src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
+    <img id="dp" src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
       -moz-border-radius-topleft: 10px;
       border-top-left-radius: 10px;">
     <div class="profile_name">
@@ -47,21 +47,22 @@
     </p>
     </div>
     <div class="p_content wishlist">
-    <h1>{{user['fname']}}'s Wishlist</h1>
+    <h1 style="width:98%;">{{user['fname']}}'s Wishlist<span style="float:right;"><a class="fancy flashk fancybox.ajax" href="{{url_for('about')}}"><em>Instructions</em></a><a class="fancy" href="#addwish"><img title="Click to add new wish" src="/static/product-fav-icon.png" width="30"></a></span></h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
-        <div class="alert alert-info alert-dismissable" style="width:98%;">
+        <div class="alert alert-success alert-dismissable" style="width:98%;">
           <a class="close" href="#">×</a>
             {{message}}
         </div>
       {% endfor %}
     {% endif %}
     {% endwith %}
+    <div id ="addwish" style="display:none;">
     <form action="{{ url_for('addWish') }}" method="post">
       {{ form.hidden_tag() }}
       <table style="width:98%;">
-        <tr><td style="width:11%;">Web Address:</td><td>{{ form.url(placeholder="Enter Web Address Here", class_="form-control") }}</td><td>Please use this field to add items to your wishlist. If you want to delete a wish, click the checkbox next to it.</td></tr>
+        <tr><td style="width:101px;">Web Address:</td><td>{{ form.url(placeholder="Enter Web Address Here", class_="form-control") }}</td><td>Please use this field to add items to your wishlist<br> by pasting the URL of the webpage that has the item you want.</td></tr>
         {% if form.url.errors|length != 0 %}
         <tr><td colspan="3"><div class="flash">
         {% for message in form.url.errors %}
@@ -72,14 +73,15 @@
         <tr><td colspan="3"><div class="imgBtn"><input type="image" src="/static/add-to-wishlist.jpg" alt="submit" style="height:24px;"/></div></td></tr>
       </table>
       </form>
+      </div>
       {% if form.url.errors|length == 0 and error != "User has no wishes" %}
         <div
         class="fb-like"
         data-share="true"
         data-width="250"
-        data-show-faces="true" style="float:left; margin:10px 10px;">
+        data-show-faces="true" style="float:left; margin:10px;">
       </div>
-      <div style="float:left; margin 10px 10px;"> <a class="flash" href="mailto:name1@mail.com?subject=Hey!%20Checkout%20my%20wishlist!&amp;body=Hey%20Friend%3A%0A%0Acheck%20out%20my%20wishlist%20at%20the%20following%20address%3A%0Ahttp%3A%2F%2Finfo3180-project4-marklandp.c9users.io%3A8080%2Fapi%2Fuser%2F{{(user['id'])}}%2Fwishlist.%20Please%20help%20me%20to%20get%20some%20of%20these%20things%20off%20my%20list!%0A%20%0AThank%20you!">Share wishlist</a> </div>
+      <div style="float:left; margin:10px;"> <a class="flash" target="_blank" href="mailto:name1@mail.com?subject=Hey!%20Checkout%20my%20wishlist!&amp;body=Hey%20Friend%3A%0A%0Acheck%20out%20my%20wishlist%20at%20the%20following%20address%3A%0Ahttp%3A%2F%2Finfo3180-project4-marklandp.c9users.io%3A8080%2Fapi%2Fuser%2F{{(user['id'])}}%2Fwishlist.%20Please%20help%20me%20to%20get%20some%20of%20these%20things%20off%20my%20list!%0A%20%0AThank%20you!">Share wishlist</a> </div>
       <!--<div class="fb-share-button" data-href="{{share['url']}}" data-layout="button_count" data-mobile-iframe="false"></div>-->
      <hr style="width:95%; clear:left;"/>
      {% endif %}
@@ -89,8 +91,29 @@
         {% endif %}
         <table style="width:95%">
           {% for wish in wishes %}
-            <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td><td><input class="entry" type="checkbox" name="wish" value="{{wish['id']}}"></td></tr>
-            <tr><td colspan="3"><hr /></td></tr>
+            <tr><td><a href="{{wish['url']}}" target="_blank"><img src="{{wish['thumbnail']}}" height="100" width="100"></a></td><td><p><strong>Title:</strong>{{wish['title']}}</p><p><strong>Description:</strong>{{wish['description']}}</p></td>
+            <td>
+              <a class="fancy fancybox.ajax" href="{{url_for('priority', id=wish['id'])}}">
+              <div class="rating">
+                {% if wish['rating'] == "1" or wish['rating'] is none %}
+                <img class="onestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                {% endif %}
+                {% if wish['rating'] == "2" %}
+                <img class="twostarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                {% endif %}
+                {% if wish['rating'] == "3" %}
+                <img class="threestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                {% endif %}
+                {% if wish['rating'] == "4" %}
+                <img class="fourstarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                {% endif %}
+                {% if wish['rating'] == "5" %}
+                <img class="fivestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                {% endif %}
+              </div>
+              </a>
+            </td><td><input class="entry" type="checkbox" name="wish" value="{{wish['id']}}"></td></tr>
+            <tr><td colspan="4"><hr /></td></tr>
           {% endfor %}
       </table>
       </div>

@@ -123,7 +123,7 @@ def profiles():
 def profile(id):
   usr = User_info.query.filter_by(id=id).first()
   if usr:
-    wishes = Wishes.query.filter_by(user=usr.email).all()
+    wishes = Wishes.query.filter_by(user=usr.email).order_by(Wishes.rating.desc()).all()
     if request.method == "GET":
       form = WishForm()
       error = "User has no wishes"
@@ -141,9 +141,10 @@ def profile(id):
     desc = request.form['description']
     thumb = request.form['thumb']
     url = request.form['url']
+    rating = request.form['priority']
     user = usr.email
     if thumb is not None:
-      wish = Wishes(title,desc,thumb,user,url)
+      wish = Wishes(title,desc,thumb,user,url,rating)
       db.session.add(wish)
       db.session.commit()
       return redirect(url_for('profile', id=str(g.user.id)))
@@ -214,31 +215,25 @@ def addWish():
 @login_required
 def delete(id):
   wish = Wishes.query.filter_by(id=id).first()
-  if wish:
+  if wish and wish.user == g.user.email:
     db.session.delete(wish)
     db.session.commit()
     flash ("Wish deleted!")
     return redirect(url_for('profile', id=str(g.user.id)))
+  flash("unfortunately you are not authorized to delete this wish!!! Please do not use this website maliciously!!!")
   return redirect(url_for('profile', id=str(g.user.id)))
   
-# @app.route('/commit', methods=['POST'])
-# @login_required
-# def commit():
-#   if request.method == "POST":
-#     title = request.form['title']
-#     desc = request.form['description']
-#     thumb = request.form['thumbnail']
-#     origin = request.form['origin']
-#     user = g.user.email
-#     if thumb is not None:
-#       wish = Wishes(title,desc,thumb,user,origin)
-#       db.session.add(wish)
-#       db.session.commit()
-#       return redirect(url_for('profile'))
-#     else:
-#       return redirect(url_for('profile'))
-#   else:
-#     return render_template('404.html')
+@app.route('/api/wish/<id>/priority', methods=['GET','POST'])
+@login_required
+def priority(id):
+  if request.method == "POST":
+    value = request.form['priority']
+    wish = Wishes.query.get(id)
+    wish.rating = value
+    db.session.commit()
+    flash("Wish rating/priority updated!")
+    return redirect(url_for('home'))
+  return render_template('update-priority.html', id=id)
   
     
 @app.before_request

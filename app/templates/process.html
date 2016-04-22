@@ -9,7 +9,7 @@
   <div class="body">
   <div id="images-cont" class="cont">
   <div class="head">
-    <img src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
+    <img id="dp" src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
       -moz-border-radius-topleft: 10px;
       border-top-left-radius: 10px;">
     <div class="profile_name">
@@ -22,14 +22,21 @@
       <table>
       <form action="/api/user/{{user['id']}}/wishlist" method=post>
       <input type="hidden" name="url" value="{{url}}"> 
-      <tr><td><strong>Title:</strong></td><td> {{title}}</td></tr>
-      <tr><td><strong>Edit Title:</strong></td><td><input type="text" name="title" value="{{title}}" style="width:550px;"></td></tr>
-      <tr><td><strong>Description:</strong></td><td> {{description}}</td></tr>
-      <tr><td><strong>Edit Description:</strong></td><td><textarea name="description" rows="5" cols="80" maxlength="199">{{description[0:199]}}</textarea></td></tr>
+      <tr><td><strong>Title:</strong></td><td colspan="2"> {{title}}</td></tr>
+      <tr><td><strong>Edit Title:</strong></td><td colspan="2"><input type="text" name="title" value="{{title}}" style="width:550px;"></td></tr>
+      <tr><td><strong>Description:</strong></td><td colspan="2"> {{description}}</td></tr>
+      <tr><td><strong>Edit Description:</strong></td><td colspan="2"><textarea name="description" rows="5" cols="80" maxlength="199">{{description[0:199]}}</textarea></td></tr>
+      <tr><td><strong>Select Rating:</strong></td><td><select class="form-control" id="pri-proc-val" name="priority">
+        <option value="1">One star </option>
+        <option value="2">Two stars </option>
+        <option value="3">Three stars </option>
+        <option value="4">Four stars </option>
+        <option value="5">Five stars </option>
+      </select></td><td><p><strong>This can be changed/updated later</strong></p></td></tr>
       {% for image in images[0:15] %}
         <tr><td><input type="radio" name="thumb" value="{{image}}"></td><td> <img src="{{image}}" height="150" width="200"></td></tr>
       {% endfor %}
-      <tr><td colspan="2"><input type="submit" value="Confirm"/></td></tr>
+      <tr><td colspan="3"><input type="submit" value="Confirm"/></td></tr>
       </form>
       </table>
     </div>
