@@ -26,7 +26,8 @@ Features implemented
 6. user can delete a wish
 7. each wish thumbnail is clickable and routes to the original url of the item in the wishlist
 8. if user has no wishes a message is displayed and sharing is disabled/hidden. As soon as a wish is added, sharing is enabled
-9. Logged user tries to access registration and login routes, they are redirected and a message is displayed. Admin can access registration page. Admin user has email "admin@wishlist.com"
+9. Five star rating system implemented. Wishlist is sorted based on rating. Higher rated wishes at top of list
+10. Logged user tries to access registration and login routes, they are redirected and a message is displayed. Admin can access registration page. Admin user has email "admin@wishlist.com"
 
 
 Confirmed to work on these websites
