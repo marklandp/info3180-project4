@@ -36,10 +36,10 @@ Confirmed to work on these websites
 2. E-Bay
 3. Tiger Direct
 4. Lenovo
-5. Only pulls the dell logo. Can't pull laptop thumbnail. Description, Title and URL pulled
+5. Dell
 6. Best Buy
 7. Newegg
-7. May work on others, not tested
+7. May work on others, not tested. Pretty sure it works on every single website though, even non e-commerce sites
 
 
 Routes not in API documentation

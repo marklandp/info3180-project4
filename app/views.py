@@ -147,6 +147,7 @@ def profile(id):
       wish = Wishes(title,desc,thumb,user,url,rating)
       db.session.add(wish)
       db.session.commit()
+      flash("your wish was successfully added!")
       return redirect(url_for('profile', id=str(g.user.id)))
     return redirect(url_for('profile', id=str(g.user.id)))
   return render_template('404.html')
@@ -167,19 +168,21 @@ def addWish():
         flash ('This item already exists in your wishlist.')
         return redirect(url_for('profile', id=str(g.user.id)))
     images = []
-    hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-       'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-       'Accept-Encoding': 'none',
-       'Accept-Language': 'en-US,en;q=0.8',
-       'Connection': 'keep-alive'}
-    req = urllib2.Request(url, headers=hdr)
-    data = urllib2.urlopen(req)
-    soup = BeautifulSoup(data, 'html.parser')
+    if "dell.com" not in url:
+      hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+        'Accept-Encoding': 'none',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Connection': 'keep-alive'}
+      req = urllib2.Request(url, headers=hdr)
+      page = urllib2.build_opener(urllib2.HTTPCookieProcessor).open(req).read()
+    else:
+      page = page = urllib2.build_opener(urllib2.HTTPCookieProcessor).open(url).read()
+    soup = BeautifulSoup(page)
     title = (soup.find('meta', property='og:title') or 
                     soup.find('meta', attrs={'name': 'title'}))
     if title and title['content']:
-      #print title['content']
       content = title['content']
     else:
       content = "Really want this"
@@ -203,6 +206,7 @@ def addWish():
     thumbnail_spec = soup.find('link', rel='image_src')
     if thumbnail_spec and thumbnail_spec['href']:
       images.append(thumbnail_spec['href'])
+      
     if len(images) >= 1:
       return render_template('process.html', user=user, description=description, title=content, images=images, url=url)
     else:
