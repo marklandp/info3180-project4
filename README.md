@@ -28,7 +28,7 @@ Features implemented
 8. if user has no wishes a message is displayed and sharing is disabled/hidden. As soon as a wish is added, sharing is enabled
 9. Five star rating system implemented. Wishlist is sorted based on rating. Higher rated wishes at top of list
 10. Logged user tries to access registration and login routes, they are redirected and a message is displayed. Admin can access registration page. Admin user has email "admin@wishlist.com"
-11. Ability to mark items as bought and remove them from main wishlist view.
+11. Ability to mark items as bought and remove them from main wishlist view. Click on 'view bought items' to load items marked as bought. Click on the link again to load current wishlist
 12. Click on user profile image to get a bigger picture, click on your name to return to your personal home screen from anywhere
 
 
@@ -52,3 +52,5 @@ Routes not in API documentation
       flashed to tell the user not to use the website maliciously. Works great otherwise.
 2. **"/api/wish/\<id\>/priority" METHODS=GET,POST**  
      Used to update the rating of a wish. takes wish id and updates record
+3. **"/api/wish/\<id\>/bought" METHOD=GET**
+4.   Marks an item as bought. Similar security measure as with the delete route.
