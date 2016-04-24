@@ -13,7 +13,7 @@
       -moz-border-radius-topleft: 10px;
       border-top-left-radius: 10px;">
     <div class="profile_name">
-      <h1>{{user['fname']}}  {{user['lname']}}</h1>
+      <h1><a id="myname" href="{{url_for('home')}}">{{user['fname']}}  {{user['lname']}}</a></h1>
     </div>
   </div>
   <div id="images" class="p_content content">

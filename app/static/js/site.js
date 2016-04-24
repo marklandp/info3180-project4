@@ -9,7 +9,7 @@
    });
   $("#fancyprocess").fancybox({
     type: 'inline',
-    title: '<h3>Click on an Image to select it as your wish thumbnail.</h3>',
+    title: '<h4>Click on an Image to select it as your wish thumbnail.</h4>',
   		scrolling:'yes',
   		autoSize : false,
     width    : "82%",

@@ -63,19 +63,19 @@
             <td>
               <div class="rating">
                 {% if wish['rating'] == "1" or wish['rating'] is none %}
-                <img class="onestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                <img class="onestarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                 {% endif %}
                 {% if wish['rating'] == "2" %}
-                <img class="twostarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                <img class="twostarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                 {% endif %}
                 {% if wish['rating'] == "3" %}
-                <img class="threestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                <img class="threestarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                 {% endif %}
                 {% if wish['rating'] == "4" %}
-                <img class="fourstarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                <img class="fourstarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                 {% endif %}
                 {% if wish['rating'] == "5" %}
-                <img class="fivestarrating" src="http://info3180-project4-marklandp.c9users.io:8080/static/5-Star_rating_system.png" height="100" width="100"/> 
+                <img class="fivestarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                 {% endif %}
               </div>
             </td></tr>

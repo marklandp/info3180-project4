@@ -25,11 +25,14 @@ body {
 .head {
   position: relative;
   background-color: #adffff;
-  height:100px
+  height:100px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 
 #main {
-  width:1000px;
+  width:1200px;
   margin: 5px auto; 
 }
 
@@ -104,13 +107,12 @@ body {
 
 .cont {
   margin: 20px auto;
-  width: 1000px;
+  width: 1200px;
   background-color:lightCyan;
   height: auto;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .content {
@@ -238,11 +240,23 @@ td {
   color: black;
 }
 
+#myname{
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#myname:hover {
+  text-decoration: none;
+  color: red;
+}
+
 .rating{
     width:100px;
     height:20px;
     overflow:hidden;
     position: relative;
+    margin-bottom: 5px;
 }
 
 .onestarrating {
@@ -274,6 +288,23 @@ td {
 #pri-proc-val {
   width: 90%;
 }
+
+.ih-item.square.colored.effect9.right_to_left {
+  float: left;
+}
+
+.info-back {
+   overflow-y: auto;
+}
+
+#spacer {
+  margin-right: 30px;
+  margin-bottom: 30px;
+  width: 252px;
+  height: 250px;
+}
+
+span.clear { clear: left; display: block; }
 
 address {
   width:1000px;
