@@ -1,6 +1,7 @@
  $(window).load(function() {
   $(".close").click(dismiss);
   $(".choose").click(accept);
+  $(".ih-item.square.colored.effect9.right_to_left").click(flip);
   $(".entry").click(remove);
   $(".entry2").click(bought);
   $("#showbought").click(toggle);
@@ -59,4 +60,9 @@
 function toggle() {
  $(".needed").toggle("slow");
  $(".bought").toggle("slow");
+}
+
+function flip() {
+ $(event.target).parent().toggleClass("flip");
+ 
 }
