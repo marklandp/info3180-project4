@@ -129,14 +129,14 @@ def profile(id):
       error = "User has no wishes"
       image = url_for('static', filename='img/'+usr.image)
       user = {'id':str(id), 'image':image, 'age':usr.age, 'fname':usr.fname, 'lname':usr.lname, 'email':usr.email, 'sex':usr.sex}
-      share = {'title':urllib2.quote(usr.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/api/user/"+str(id)+"/wishlist", 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
       if g.user.is_authenticated:
         if wishes:
-          return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form, share=share)
-        return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share, error=error)
+          return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form)
+        return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, error=error)
       if wishes:
-        return render_template('viewwishlist.html', wishes=wishes, share=share, user=user)
+        return render_template('viewwishlist.html', wishes=wishes, user=user)
       return render_template('viewwishlist.html', user=user, error=error)
+    bought = request.form['bought']
     title = request.form['title']
     desc = request.form['description']
     thumb = request.form['thumb']
@@ -144,7 +144,7 @@ def profile(id):
     rating = request.form['priority']
     user = usr.email
     if thumb is not None:
-      wish = Wishes(title,desc,thumb,user,url,rating)
+      wish = Wishes(title,desc,thumb,user,url,rating,bought)
       db.session.add(wish)
       db.session.commit()
       flash("your wish was successfully added!")
@@ -238,6 +238,18 @@ def priority(id):
     flash("Wish rating/priority updated!")
     return redirect(url_for('home'))
   return render_template('update-priority.html', id=id)
+  
+@app.route('/api/wish/<id>/bought', methods=['GET'])
+@login_required
+def bought(id):
+  wish = Wishes.query.get(id)
+  if wish and wish.user == g.user.email:
+    wish.bought = "1"
+    db.session.commit()
+    flash("Wish successfully marked as bought. Click 'View bought items' to view wishes already purchased.")
+    return redirect(url_for('profile', id=str(g.user.id)))
+  flash("unfortunately you are not authorized to update this wish!!! Please do not use this website maliciously!!!")
+  return redirect(url_for('profile', id=str(g.user.id)))
   
     
 @app.before_request

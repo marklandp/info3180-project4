@@ -28,6 +28,8 @@ Features implemented
 8. if user has no wishes a message is displayed and sharing is disabled/hidden. As soon as a wish is added, sharing is enabled
 9. Five star rating system implemented. Wishlist is sorted based on rating. Higher rated wishes at top of list
 10. Logged user tries to access registration and login routes, they are redirected and a message is displayed. Admin can access registration page. Admin user has email "admin@wishlist.com"
+11. Ability to mark items as bought and remove them from main wishlist view.
+12. Click on user profile image to get a bigger picture, click on your name to return to your personal home screen from anywhere
 
 
 Confirmed to work on these websites

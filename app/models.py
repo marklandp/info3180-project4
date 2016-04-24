@@ -52,14 +52,16 @@ class Wishes(db.Model):
   user = db.Column(db.String(50), db.ForeignKey("user_info.email"))
   url = db.Column(db.String(255))
   rating = db.Column(db.String(1))
+  bought = db.Column(db.String(1))
   
-  def __init__(self, title, description, thumb, user, url, rating): 
+  def __init__(self, title, description, thumb, user, url, rating, bought): 
     self.title = title
     self.description = description
     self.thumbnail = thumb
     self.user = user
     self.url = url
     self.rating = rating
+    self.bought = bought
     
   def __repr__(self):
     return '<Wish %r>' % self.title

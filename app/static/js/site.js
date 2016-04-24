@@ -2,6 +2,8 @@
   $(".close").click(dismiss);
   $(".choose").click(accept);
   $(".entry").click(remove);
+  $(".entry2").click(bought);
+  $("#showbought").click(toggle);
   $(".fancy").fancybox({
   		scrolling:'no',
   		openEffect	: 'elastic',
@@ -35,9 +37,26 @@
    }
   }
  }
+ 
+ function bought() {
+  var entry = $('.entry2');
+  if (entry.is(':checked')) {
+   var sure = confirm("Confirm mark item as bought?");
+   if (sure == true) {
+    var wish = $(event.target).val();
+    var url = "/api/wish/"+wish+"/bought";
+    $(location).attr("href", url);
+   }
+  }
+ }
   
  function accept() {
   var source = event.target.src;
   $("#thumbnail").attr("src",source);
   $("#thumb").attr('value',source);
  }
+ 
+function toggle() {
+ $(".needed").toggle("slow");
+ $(".bought").toggle("slow");
+}
