@@ -1,5 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.fields import TextField, IntegerField, SelectField, FileField, PasswordField, SubmitField
+from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Length, EqualTo, ValidationError, Email, NumberRange
 from app.models import User_info
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
@@ -29,6 +30,8 @@ class RegistrationForm(Form):
   image = FileField('Image', validators=[Required(message="Must upload an image")])
   age = IntegerField('Age', validators=[Required(message="Required"), NumberRange(min=10,max=85, message="Only 10 - 85 year olds")])
   sex = SelectField('Sex', choices=[('Male','Boy'),('Female','Girl')], validators=[Required(message="Required")])
+  
+  
   
 
 class SigninForm(Form):

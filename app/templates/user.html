@@ -31,7 +31,7 @@
   <div class="body">
   <div class="cont">
   <div class="head">
-    <a class="fancy" href="{{user['image']}}"><img id="dp" src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
+    <a class="fancy" href="{{user['image']}}"><img id="dp" class="img-circle" src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
       -moz-border-radius-topleft: 10px;
       border-top-left-radius: 10px;"></a>
     <div class="profile_name">
@@ -103,9 +103,9 @@
             <div class="info">
             <div class="info-back">
               <h3>{{wish['title']}}</h3>
-              <p>{{wish['description']}}</p>
-              <p>Mark item as bought: <input class="entry2" type="checkbox" name="wish" value="{{wish['id']}}"></p>
-              <table style="margin:auto;color:white;margin-bottom:5px;">
+              <p>{{wish['description']}}</p></a>
+              <p class="raise">Mark item as bought: <input class="entry2" type="checkbox" name="wish" value="{{wish['id']}}"></p>
+              <table class="raise" style="margin:auto;color:white;margin-bottom:5px;">
                 <thead>
                   <tr>
                     <td>Rating</td><td>Delete?</td>
@@ -131,27 +131,26 @@
                         {% if wish['rating'] == "5" %}
                         <img class="fivestarrating" src="{{url_for('static', filename='5-Star_rating_system.png')}}" height="100" width="100"/> 
                         {% endif %}
-                      </div>
-                      </a>
+                      </div></a>
                     </td><td><input class="entry" type="checkbox" name="wish" value="{{wish['id']}}"></td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            </div></a>
+            </div>
             </div>
             </div>
           {% endif %}
           {% if wish['bought'] == "1" %}
             <div class="bought" style="display:none;">
-            <div id="{{wish['id']}}" class="ih-item square colored effect9 right_to_left"><a href="{{wish['url']}}" target="_blank">
+            <div id="{{wish['id']}}" class="ih-item square colored effect9 right_to_left red"><a href="{{wish['url']}}" target="_blank">
             <div class="img"><img src="{{wish['thumbnail']}}" alt="img" height="235" width="316"></div>
             <div class="info">
             <div class="info-back">
               <h3>{{wish['title']}}</h3>
               <p>{{wish['description']}}</p>
-              <p><strong style="color:red;">This item was previously bought</strong></p>
-              <table style="margin:auto;color:white;margin-bottom:5px;">
+              <p><strong style="color:red;">This item was previously bought</strong></p></a>
+              <table class="raise" style="margin:auto;color:white;margin-bottom:5px;">
                 <thead>
                   <tr>
                     <td>Rating</td><td>Delete?</td>
@@ -182,7 +181,7 @@
                 </tbody>
               </table>
             </div>
-            </div></a>
+            </div>
             </div>
             </div>
           {% endif %}
