@@ -55,7 +55,7 @@ def timeinfo():
     
 @app.route('/api/user/register', methods=['POST', 'GET'])
 def register():
-  """Render the profile page"""
+  """Render the register page"""
   form = RegistrationForm()
     
   if form.validate_on_submit():
@@ -123,8 +123,8 @@ def profiles():
 def profile(id):
   usr = User_info.query.filter_by(id=id).first()
   if usr:
-    wishes = Wishes.query.filter_by(user=usr.email).order_by(Wishes.rating.desc()).all()
     if request.method == "GET":
+      wishes = Wishes.query.filter_by(user=usr.email).order_by(Wishes.rating.desc()).all()
       form = WishForm()
       error = "User has no wishes"
       image = url_for('static', filename='img/'+usr.image)
@@ -142,14 +142,14 @@ def profile(id):
     thumb = request.form['thumb']
     url = request.form['url']
     rating = request.form['priority']
+    category = request.form["category"]
     user = usr.email
     if thumb is not None:
-      wish = Wishes(title,desc,thumb,user,url,rating,bought)
+      wish = Wishes(title,desc,thumb,user,url,rating,bought,category)
       db.session.add(wish)
       db.session.commit()
       flash("your wish was successfully added!")
       return redirect(url_for('profile', id=str(g.user.id)))
-    return redirect(url_for('profile', id=str(g.user.id)))
   return render_template('404.html')
   
   
@@ -159,7 +159,6 @@ def addWish():
   form = WishForm()
   image = url_for('static', filename='img/'+g.user.image)
   user = {'id':g.user.id, 'image':image, 'age':g.user.age, 'fname':g.user.fname, 'lname':g.user.lname, 'email':g.user.email, 'sex':g.user.sex}
-  share = {'title':urllib2.quote(g.user.fname+"'s wishlist"), 'summary':urllib2.quote("This is my wishlist. Please purchase an item as a gift for me if you are able to."), 'url':"http://info3180-project4-marklandp.c9users.io:8080/wishes/"+g.user.email, 'image':"http://info3180-project4-marklandp.c9users.io:8080"+image}
   if form.validate_on_submit():
     url = request.form['url']
     wishes = Wishes.query.filter_by(user=g.user.email).all()
@@ -213,7 +212,7 @@ def addWish():
       desc="Unable to scrape any images from given url"
       title="Error"
       return render_template('process.html', user=user, description=desc, title=title, images=images)
-  return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, share=share)
+  return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form)
   
 @app.route('/api/wish/<id>/delete', methods=['GET'])
 @login_required
@@ -251,6 +250,124 @@ def bought(id):
   flash("unfortunately you are not authorized to update this wish!!! Please do not use this website maliciously!!!")
   return redirect(url_for('profile', id=str(g.user.id)))
   
+@app.route('/api/user/update-view', methods=['POST'])
+@login_required
+def updateView():
+  cat = request.form['category']
+  data = ""
+  if cat == "All":
+    wishes = Wishes.query.filter_by(user=g.user.email).order_by(Wishes.rating.desc()).all()
+  else:
+    wishes = Wishes.query.filter_by(category=cat).order_by(Wishes.rating.desc()).all()
+  print len(wishes);
+  if wishes:
+    for wish in wishes:
+      if wish.bought == "0" or wish.bought is None:
+        data += """<div class="needed">
+          <div id=\""""
+        data += str(wish.id)+"""\" class="ih-item square colored effect9 right_to_left"><a href=\""""
+        data += wish.url+"""\" target="_blank">
+          <div class="img"><img src=\""""
+        data+= wish.thumbnail+"""\" alt="img" height="235" width="316"></div>
+          <div class="info">
+          <div class="info-back">
+            <h3>"""
+        data += wish.title+"""</h3>
+            <p>"""
+        data += wish.description+"""</p></a>
+            <p class="raise">Mark item as bought: <input class="entry2" type="checkbox" name="wish" value=\""""
+        data += str(wish.id)+"""\" onclick="javascript:bought(event)"></p>
+            <table class="raise" style="margin:auto;color:white;margin-bottom:5px;">
+              <thead>
+                <tr>
+                  <td>Rating</td><td>Delete?</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <a class="fancy fancybox.ajax" href=\""""
+        data += url_for('priority', id=str(wish.id))+"""\">
+                    <div class="rating">"""
+        if wish.rating == "1" or wish.rating is None:
+          data += """<img class="onestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>""" 
+        elif wish.rating == "2":
+          data += """<img class="twostarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "3":
+          data += """<img class="threestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "4":
+          data += """<img class="fourstarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "5":
+          data += """<img class="fivestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        data +=    """</div></a>
+                  </td><td><input class="entry" type="checkbox" name="wish" value=\""""
+        data +=   str(wish.id)+"""\" onclick="javascript:delWish(event)"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          </div>
+          </div>"""
+      elif wish.bought == "1":
+        data += """<div class="bought" style="display:none;">
+          <div id=\""""
+        data += str(wish.id)+"""\" class="ih-item square colored effect9 right_to_left red"><a href=\""""
+        data += wish.url+"""\" target="_blank">
+          <div class="img"><img src=\""""
+        data+= wish.thumbnail+"""\" alt="img" height="235" width="316"></div>
+          <div class="info">
+          <div class="info-back">
+            <h3>"""
+        data += wish.title+"""</h3>
+            <p>"""
+        data += wish.description+"""</p>
+            <p><strong style="color:red;">This item was previously bought</strong></p></a>
+            <table class="raise" style="margin:auto;color:white;margin-bottom:5px;">
+              <thead>
+                <tr>
+                  <td>Rating</td><td>Delete?</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <a class="fancy fancybox.ajax" href=\""""
+        data += url_for('priority', id=str(wish.id))+"""\">
+                    <div class="rating">"""
+        if wish.rating == "1" or wish.rating is None:
+          data += """<img class="onestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>""" 
+        elif wish.rating == "2":
+          data += """<img class="twostarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "3":
+          data += """<img class="threestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "4":
+          data += """<img class="fourstarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        elif wish.rating == "5":
+          data += """<img class="fivestarrating" src=\""""
+          data += url_for('static', filename='5-Star_rating_system.png')+"""\" height="100" width="100"/>"""
+        data +=    """</div></a>
+                  </td><td><input class="entry" type="checkbox" name="wish" value=\""""
+        data +=   str(wish.id)+"""\" onclick="javascript:delWish(event)"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          </div>
+          </div>"""
+    return data
+  data += '<h1 class="lash">Aww snap! Sorry there are no wishes in the selected category!</h1>'
+  return data
     
 @app.before_request
 def before_request():
@@ -269,6 +386,11 @@ def send_text_file(file_name):
     """Send your static text file."""
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
+    
+@app.route('/<file_name>')
+def preview(file_name):
+    """Preview template."""
+    return render_template(file_name, user=g.user, description="test", title="test", images=[])
 
 
 @app.after_request

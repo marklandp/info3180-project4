@@ -30,9 +30,6 @@ class RegistrationForm(Form):
   image = FileField('Image', validators=[Required(message="Must upload an image")])
   age = IntegerField('Age', validators=[Required(message="Required"), NumberRange(min=10,max=85, message="Only 10 - 85 year olds")])
   sex = SelectField('Sex', choices=[('Male','Boy'),('Female','Girl')], validators=[Required(message="Required")])
-  
-  
-  
 
 class SigninForm(Form):
   email = TextField("Email",  validators=[Required("Please enter your email address."), Email("Incorrect E-Mail format.")])

@@ -21,7 +21,7 @@
 }(document, 'script', 'facebook-jssdk'));
 
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-  
+
 </script>
 {% endblock %}
 
@@ -31,11 +31,9 @@
   <div class="body">
   <div class="cont">
   <div class="head">
-    <a class="fancy" href="{{user['image']}}"><img id="dp" class="img-circle" src="{{ user['image'] }}" height="200" width="200" style="-webkit-border-top-left-radius: 10px;
-      -moz-border-radius-topleft: 10px;
-      border-top-left-radius: 10px;"></a>
+    <a class="fancy" href="{{user['image']}}"><img id="dp" class="img-circle" src="{{ user['image'] }}" height="200" width="200" ></a>
     <div class="profile_name">
-      <h1><a id="myname" href="{{url_for('home')}}">{{user['fname']}}  {{user['lname']}}</a> <span><a id="exit" class="button" href="{{ url_for('signout') }}">Sign Out</a></span></h1>
+      <h1><a id="myname" href="{{url_for('home')}}">{{user['fname']}}  {{user['lname']}}</a> <span><a class="btn btn-danger" role="button" href="{{ url_for('signout') }}">Sign Out</a></span></h1>
     </div>
   </div>
   <div class="p_datebox content">
@@ -90,11 +88,27 @@
       <div class="share"> <a class="flash" target="_blank" href="mailto:name1@mail.com?subject=Hey!%20Checkout%20my%20wishlist!&amp;body=Hey%20Friend%3A%0A%0Acheck%20out%20my%20wishlist%20at%20the%20following%20address%3A%0Ahttp%3A%2F%2Finfo3180-project4-marklandp.c9users.io%3A8080%2Fapi%2Fuser%2F{{(user['id'])}}%2Fwishlist.%20Please%20help%20me%20to%20get%20some%20of%20these%20things%20off%20my%20list!%0A%20%0AThank%20you!">Share wishlist</a> </div>
      <hr style="width:95%; clear:left;"/>
      {% endif %}
+     <form class="form-inline" role="form" id="updateView" method="POST" action="{{url_for('profile', id=g.user.id)}}">
+      <div class="form-group">
+        <label for="category">Select filter category</label>
+        <select class="form-control" id="category">
+          <option value="All">All</option>
+          <option value="Computer/Electronics">Computer/Electronics</option>
+          <option value="Books/Education">Books/Education</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Household">Household</option>
+          <option value="Equipment/Tools">Equipment/Tools</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+      </select>
+      </div>
+      <button type="submit" id="update-view" class="btn btn-primary">Update View</button>
+      <div class="form-group"><p>Choose a category and click "update view" button to filter entries to the selected category only</p></div>
+    </form>
+    <hr style="width:95%; clear:both;">
       <div id="wishes">
         {% if error %}
           <h1>{{error}}</h1>
         {% endif %}
-        </div>
         {% for wish in wishes %}
           {% if wish['bought'] == "0" or wish['bought'] is none %}
             <div class="needed">
@@ -186,8 +200,8 @@
             </div>
           {% endif %}
         {% endfor %}
-        <span class="clear"></span>
-      <!--</div>-->
+      </div>
+      <span class="clear"></span>
     </div>
     <div>&nbsp;</div>
     </div>

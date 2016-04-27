@@ -1,8 +1,6 @@
  $(window).load(function() {
   $(".close").click(dismiss);
   $(".choose").click(accept);
-  $(".entry").click(remove);
-  $(".entry2").click(bought);
   $("#showbought").click(toggle);
   $(".fancy").fancybox({
   		scrolling:'no',
@@ -20,13 +18,42 @@
   		closeEffect	: 'elastic',
   		closeClick: true
    }).trigger("click");
+  $( "#updateView" ).submit(function(event){
+    var cat = $("#category").val();
+    event.preventDefault();
+    var rxml = $.ajax({
+        url: "/api/user/update-view",
+        type: "POST",
+        data: {
+            category:cat
+        }
+    })
+      .done(function () {
+        var result = rxml.responseText;
+        $("#wishes").html(result);
+        }
+      );
+  });
+$(".entry").click(delWish);
+$(".entry2").click(bought);
  });
  
  function dismiss() {
   $(".alert-dismissable").hide("slow");
  }
+  
+ function accept(event) {
+  var source = event.target.src;
+  $("#thumbnail").attr("src",source);
+  $("#thumb").attr('value',source);
+ }
  
- function remove() {
+function toggle() {
+ $(".needed").toggle("slow");
+ $(".bought").toggle("slow");
+}
+
+function delWish(event) {
   var entry = $('.entry');
   if (entry.is(':checked')) {
    var sure = confirm("Do you really want to delete your wish?");
@@ -38,7 +65,7 @@
   }
  }
  
- function bought() {
+ function bought(event) {
   var entry = $('.entry2');
   if (entry.is(':checked')) {
    var sure = confirm("Confirm mark item as bought?");
@@ -49,14 +76,3 @@
    }
   }
  }
-  
- function accept() {
-  var source = event.target.src;
-  $("#thumbnail").attr("src",source);
-  $("#thumb").attr('value',source);
- }
- 
-function toggle() {
- $(".needed").toggle("slow");
- $(".bought").toggle("slow");
-}

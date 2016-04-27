@@ -53,8 +53,9 @@ class Wishes(db.Model):
   url = db.Column(db.String(255))
   rating = db.Column(db.String(1))
   bought = db.Column(db.String(1))
+  category = db.Column(db.String(50))
   
-  def __init__(self, title, description, thumb, user, url, rating, bought): 
+  def __init__(self, title, description, thumb, user, url, rating, bought, cat): 
     self.title = title
     self.description = description
     self.thumbnail = thumb
@@ -62,6 +63,7 @@ class Wishes(db.Model):
     self.url = url
     self.rating = rating
     self.bought = bought
+    self.category = cat
     
   def __repr__(self):
     return '<Wish %r>' % self.title

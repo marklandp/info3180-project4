@@ -164,12 +164,8 @@ $(document).ready( function() {
                               <!--Browse… <input multiple="" type="file">-->
                             </span>
                             </span>
-                            <input class="form-control" readonly="" type="text" value="Upload profile image"><span class="input-group-addon lash">*</span>
+                            <input class="form-control" readonly type="text" placeholder="Upload profile image"><span class="input-group-addon lash">*</span>
                           </div>
-                            <!--<div class="input-group">-->
-                            <!--  <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>-->
-                            <!--    {{ form.image(class_="form-control") }}<span class="input-group-addon lash">*</span>-->
-                            <!--</div>-->
                             <div class="lash">
                               {% for message in form.image.errors %}
                               {{ message }}
