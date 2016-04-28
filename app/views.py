@@ -259,7 +259,6 @@ def updateView():
     wishes = Wishes.query.filter_by(user=g.user.email).order_by(Wishes.rating.desc()).all()
   else:
     wishes = Wishes.query.filter_by(category=cat).order_by(Wishes.rating.desc()).all()
-  print len(wishes);
   if wishes:
     for wish in wishes:
       if wish.bought == "0" or wish.bought is None:
