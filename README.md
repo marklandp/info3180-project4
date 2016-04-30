@@ -59,3 +59,5 @@ Routes not in API documentation
     Marks an item as bought. Similar security measure as with the delete route.
 4. **"/api/user/update-view" METHOD=POST**
     Filters wishlist view to view only items in the selected category
+5. **"/api/user/<id>/wishlist/share" METHOD=POST**
+    Emails logged in user's wishlist to email addresses entered by the user.
