@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms.fields import TextField, IntegerField, SelectField, FileField, PasswordField, SubmitField
+from wtforms.fields import TextField, IntegerField, SelectField, FileField, PasswordField, SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Required, Length, EqualTo, ValidationError, Email, NumberRange
 from app.models import User_info
@@ -58,6 +58,14 @@ class WishForm(Form):
   
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
+    
+    
+class ShareForm(Form):
+  name = TextField('Name', validators=[Required()])
+  email = TextField('Email', validators=[Required(), Email()])
+  subject = TextField('Subject', validators=[Required()])
+  message = TextAreaField('Message', validators=[Required()])
+  send = SubmitField('Send')
      
       
   

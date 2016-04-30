@@ -76,7 +76,7 @@
       </div>
       {% if form.url.errors|length == 0 and error != "User has no wishes" %}
       <div class="share">
-      <div class="g-plus" data-action="share" data-height="24" data-href="http://info3180-project4-marklandp.c9users.io:8080/api/user/{{g.user.id}}/wishlist"></div>
+      <div class="g-plus" data-action="share" data-height="24" data-href="{{url_for('profile', id=g.user.id)}}"></div>
       </div>
       <div
       class="fb-like share"
@@ -85,7 +85,7 @@
       data-show-faces="true" style="float:left; margin:10px;">
       </div>
       <div class="share"><a href="https://twitter.com/intent/tweet?button_hashtag=wishlistSystem&text=Take%20a%20look%20at%20my%20wishlist" class="twitter-hashtag-button" data-size="large" data-url="http://info3180-project4-marklandp.c9users.io:8080/api/user/{{g.user.id}}/wishlist" data-dnt="true">Tweet #wishlistSystem</a></div>
-      <div class="share"> <a class="flash" target="_blank" href="mailto:name1@mail.com?subject=Hey!%20Checkout%20my%20wishlist!&amp;body=Hey%20Friend%3A%0A%0Acheck%20out%20my%20wishlist%20at%20the%20following%20address%3A%0Ahttp%3A%2F%2Finfo3180-project4-marklandp.c9users.io%3A8080%2Fapi%2Fuser%2F{{(user['id'])}}%2Fwishlist.%20Please%20help%20me%20to%20get%20some%20of%20these%20things%20off%20my%20list!%0A%20%0AThank%20you!">Share wishlist</a> </div>
+      <div class="share"> <button id="share-btn" class="btn btn-danger btn-md fancy" href="#share">Share wishlist</button> </div>
      <hr style="width:95%; clear:left;"/>
      {% endif %}
      <form class="form-inline" role="form" id="updateView" method="POST" action="{{url_for('profile', id=g.user.id)}}">
@@ -200,6 +200,37 @@
             </div>
           {% endif %}
         {% endfor %}
+        {% if share %}
+        <div id="share" style="display:none; width:275px;">
+					<form role='form' method='POST' action="{{url_for('share', id=g.user.id)}}" enctype='multipart/form-data'>
+						<div class='form-group'>
+						  <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  {{ share.name(placeholder="Enter Recipient's Name", class_="form-control") }}                                       
+              </div>
+              <div class="lash">
+                {% for message in share.name.errors %}
+                {{ message }}
+                {% endfor %}
+              </div>
+						</div>
+						<div class='form-group'>
+						  <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                  {{ share.email(placeholder="Enter Comma Seperated Emails", class_="form-control") }}                                       
+              </div>
+              <div class="lash">
+                {% for message in share.email.errors %}
+                {{ message }}
+                {% endfor %}
+              </div>
+						</div>
+						<div class='form-group'>
+								{{ share.send(class_="form-control") }}
+						</div>
+					</form>
+			</div>
+			{% endif %}
       </div>
       <span class="clear"></span>
     </div>

@@ -6,14 +6,14 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
-from app import app
+from app import app, db, mail
 from flask import Flask, Response, render_template, request, redirect, url_for, flash, jsonify, session, abort, g
 from flask.ext.login import  LoginManager, login_user , logout_user , current_user , login_required
-from app import db
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_mail import Message
 from app.models import User_info, Wishes
 from datetime import *
-from .forms import RegistrationForm, SigninForm, WishForm
+from .forms import RegistrationForm, SigninForm, WishForm, ShareForm
 import json
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql.expression import func
@@ -126,12 +126,13 @@ def profile(id):
     if request.method == "GET":
       wishes = Wishes.query.filter_by(user=usr.email).order_by(Wishes.rating.desc()).all()
       form = WishForm()
+      share = ShareForm()
       error = "User has no wishes"
       image = url_for('static', filename='img/'+usr.image)
       user = {'id':str(id), 'image':image, 'age':usr.age, 'fname':usr.fname, 'lname':usr.lname, 'email':usr.email, 'sex':usr.sex}
       if g.user.is_authenticated:
         if wishes:
-          return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form)
+          return render_template('user.html', user=user, wishes=wishes, datestr=date_to_str(g.user.datejoined), form=form, share=share)
         return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form, error=error)
       if wishes:
         return render_template('viewwishlist.html', wishes=wishes, user=user)
@@ -213,6 +214,32 @@ def addWish():
       title="Error"
       return render_template('process.html', user=user, description=desc, title=title, images=images)
   return render_template('user.html', user=user, datestr=date_to_str(g.user.datejoined), form=form)
+  
+@app.route('/api/user/<id>/wishlist/share', methods=['POST'])
+@login_required
+def share(id):
+  who = request.form['name']
+  where = request.form['email']
+  addresses = where.replace(" ","").split(",")
+  user_name = g.user.fname
+  user_email = g.user.email
+  subject = g.user.fname + "'s Wishlist"
+  msg = request.url
+  url = msg.split("/share")[0]
+  # message = """From: {} <{}>
+  # To: {} <{}>
+  # Subject: {}
+  # {}
+  # """
+  
+  msg = Message(subject,
+                  sender=user_email,
+                  recipients=addresses,
+                  html="<h2>Hi "+who+":</h1> <p>This is "+user_name+". Please view my wishlistlist at the address below</p><br><a href="+url+" target=\"_blank\">Click on this link</a><br><p>If you can't see the link or if the link is disabled, copy and paste from below<br>"+url+"<br><br></p><br><p>I really hope you can purchase an item for me</p>")
+  mail.send(msg)
+  flash("Email sent!")
+  return redirect(url_for('profile', id=id))
+      
   
 @app.route('/api/wish/<id>/delete', methods=['GET'])
 @login_required
